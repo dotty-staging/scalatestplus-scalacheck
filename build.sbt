@@ -23,8 +23,12 @@ val sharedSettings = Seq(
   ),
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   libraryDependencies ++= Seq(
-    "org.scalatest" %%% "scalatest" % "3.1.0-RC3"
+    if (scalaVersion.value.startsWith("0"))
+      "org.scalatest" %%% "scalatest" % "3.1.0-SNAP13"
+    else
+      "org.scalatest" %%% "scalatest" % "3.1.0-RC3"
   ),
+
   sourceGenerators in Compile += {
     Def.task {
       GenScalaCheckGen.genMain((sourceManaged in Compile).value / "org" / "scalatest" / "check", version.value, scalaVersion.value)
@@ -34,7 +38,7 @@ val sharedSettings = Seq(
     Def.task {
       GenScalaCheckGen.genTest((sourceManaged in Test).value / "org" / "scalatest" / "check", version.value, scalaVersion.value)
     }
-  }, 
+  },
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
     Some("publish-releases" at nexus + "service/local/staging/deploy/maven2")
@@ -44,7 +48,9 @@ val sharedSettings = Seq(
   pomIncludeRepository := { _ => false },
   credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
   pgpSecretRing := file((Path.userHome / ".gnupg" / "secring.gpg").getAbsolutePath),
-  pgpPassphrase := None
+  pgpPassphrase := None,
+
+  scalacOptions += "-language:implicitConversions"
 )
 
 lazy val scalatestPlusScalaCheck =
@@ -59,7 +65,7 @@ lazy val scalatestPlusScalaCheck =
       ),
       OsgiKeys.importPackage := Seq(
         "org.scalatest.*",
-        "org.scalactic.*", 
+        "org.scalactic.*",
         "scala.*;version=\"$<range;[==,=+);$<replace;"+scalaBinaryVersion.value+";-;.>>\"",
         "*;resolution:=optional"
       ),
@@ -74,7 +80,7 @@ lazy val scalatestPlusScalaCheck =
       crossScalaVersions := List("2.10.7", "2.11.12", "2.12.10", "2.13.1"),
       libraryDependencies ++= Seq(
         "org.scalacheck" %%% "scalacheck" % "1.14.1"
-      ), 
+      ),
       sourceGenerators in Compile += {
         Def.task {
           GenResourcesJSVM.genResources((sourceManaged in Compile).value / "org" / "scalatestplus" / "scalacheck", version.value, scalaVersion.value) ++
@@ -85,8 +91,11 @@ lazy val scalatestPlusScalaCheck =
     .jvmSettings(
       crossScalaVersions := List("2.10.7", "2.11.12", "2.12.10", "2.13.1"),
       libraryDependencies ++= Seq(
-        "org.scalacheck" %%% "scalacheck" % "1.14.1"
-      ), 
+        if (scalaVersion.value.startsWith("0"))
+          "org.scalacheck" %%% "scalacheck" % "1.14.1-SNAPSHOT"
+        else
+          "org.scalacheck" %%% "scalacheck" % "1.14.1"
+      ),
       sourceGenerators in Compile += {
         Def.task {
           GenResourcesJVM.genResources((sourceManaged in Compile).value / "org" / "scalatestplus" / "scalacheck", version.value, scalaVersion.value) ++
@@ -95,11 +104,11 @@ lazy val scalatestPlusScalaCheck =
       }
     )
     .nativeSettings(
-      scalaVersion := "2.11.12", 
-      nativeLinkStubs in NativeTest := true, 
+      scalaVersion := "2.11.12",
+      nativeLinkStubs in NativeTest := true,
       libraryDependencies ++= Seq(
         "org.scalacheck" %%% "scalacheck" % "1.14.1"
-      ), 
+      ),
       sourceGenerators in Compile += {
         Def.task {
           GenResourcesJSVM.genResources((sourceManaged in Compile).value / "org" / "scalatestplus" / "scalacheck", version.value, scalaVersion.value) ++
