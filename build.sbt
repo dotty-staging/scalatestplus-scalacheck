@@ -23,7 +23,7 @@ val sharedSettings = Seq(
   ),
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   libraryDependencies ++= Seq(
-    if (scalaVersion.value.startsWith("0"))
+    if (scalaVersion.value.startsWith("0") || scalaVersion.value.startsWith("0"))
       "org.scalatest" %%% "scalatest" % "3.1.0-SNAP13"
     else
       "org.scalatest" %%% "scalatest" % "3.1.0-RC3"
