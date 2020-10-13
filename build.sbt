@@ -23,7 +23,7 @@ val sharedSettings = Seq(
   ),
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   libraryDependencies ++= Seq(
-    if (scalaVersion.value.startsWith("0") || scalaVersion.value.startsWith("0"))
+    if (scalaVersion.value.startsWith("0") || scalaVersion.value.startsWith("3"))
       "org.scalatest" %%% "scalatest" % "3.1.0-SNAP13"
     else
       "org.scalatest" %%% "scalatest" % "3.1.0-RC3"
@@ -91,7 +91,7 @@ lazy val scalatestPlusScalaCheck =
     .jvmSettings(
       crossScalaVersions := List("2.10.7", "2.11.12", "2.12.10", "2.13.1"),
       libraryDependencies ++= Seq(
-        if (scalaVersion.value.startsWith("0"))
+        if (scalaVersion.value.startsWith("0") || scalaVersion.value.startsWith("3"))
           "org.scalacheck" %%% "scalacheck" % "1.14.1-SNAPSHOT"
         else
           "org.scalacheck" %%% "scalacheck" % "1.14.1"
